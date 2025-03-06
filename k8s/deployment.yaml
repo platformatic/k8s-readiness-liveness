@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-readiness-liveness
+  labels:
+    app: demo-readiness-liveness
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-readiness-liveness
+  template:
+    metadata:
+      labels:
+        app: demo-readiness-liveness
+    spec:
+      containers:
+      - name: demo-readiness-liveness
+        image: demo-readiness-liveness:latest
+        imagePullPolicy: Never  # Use local image
+        env:
+        - name: PLT_SERVER_HOSTNAME
+          value: "0.0.0.0"
+        ports:
+        - containerPort: 3001
+          name: service
+        - containerPort: 9090
+          name: metrics
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          failureThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          failureThreshold: 1
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"

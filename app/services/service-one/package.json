@@ -1,0 +1,9 @@
+{
+    "type": "module",
+    "private": true,
+    "main": "index.js",
+    "dependencies": {
+        "fastify": "^5.0.0",
+        "@platformatic/node": "^2.52"
+    }
+}
